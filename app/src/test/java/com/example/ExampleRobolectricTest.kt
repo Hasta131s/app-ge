@@ -1,8 +1,11 @@
 package com.example
 
+import android.app.Application
 import android.content.Context
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import org.junit.Assert.assertEquals
+import com.example.ui.KayryptViewModel
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -15,6 +18,14 @@ class ExampleRobolectricTest {
   @Test
   fun `read string from context`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
-    org.junit.Assert.assertNotNull(context)
+    assertNotNull(context)
+  }
+
+  @Test
+  fun `test viewModel instantiation`() {
+    val app = ApplicationProvider.getApplicationContext<Application>()
+    assertNotNull(app)
+    val viewModel = KayryptViewModel(app)
+    assertNotNull(viewModel)
   }
 }

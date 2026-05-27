@@ -46,26 +46,6 @@ class KayryptViewModel(application: Application) : AndroidViewModel(application)
     val protectedApps: StateFlow<List<ProtectedApp>>
     val securityLogs: StateFlow<List<SecurityLog>>
 
-    init {
-        val database = AppDatabase.getDatabase(application)
-        repository = ProtectedAppRepository(database.protectedAppDao())
-        
-        protectedApps = repository.allProtectedApps.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-        
-        securityLogs = repository.securityLogs.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-        
-        // Scan installed apps plus load fallback systems
-        scanDeviceApplications()
-    }
-
     // App discovery states
     var scannedApps by mutableStateOf<List<AppOption>>(emptyList())
         private set
@@ -104,6 +84,26 @@ class KayryptViewModel(application: Application) : AndroidViewModel(application)
 
     // Filter states
     var selectedTab by mutableStateOf(0) // 0 = Guard Home, 1 = Secure Vault, 2 = Security Logs, 3 = Terminal Info
+
+    init {
+        val database = AppDatabase.getDatabase(application)
+        repository = ProtectedAppRepository(database.protectedAppDao())
+        
+        protectedApps = repository.allProtectedApps.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+        
+        securityLogs = repository.securityLogs.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+        
+        // Scan installed apps plus load fallback systems
+        scanDeviceApplications()
+    }
 
     fun selectApp(app: AppOption) {
         selectedAppToProtect = app
