@@ -388,66 +388,66 @@ fun GuardMainPanel(viewModel: KayryptViewModel) {
         }
 
         // Horizontal items layout helper or custom responsive list
-        item {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+        items(filteredList) { app ->
+            val isSelected = viewModel.selectedAppToProtect?.packageName == app.packageName
+            Card(
+                onClick = { viewModel.selectApp(app) },
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isSelected) CyberEmerald.copy(alpha = 0.15f) else DarkMetalSurface
+                ),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = if (isSelected) CyberNeonGreen else CyberSlateGray
+                ),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("app_select_card_${app.packageName}")
             ) {
-                filteredList.forEach { app ->
-                    val isSelected = viewModel.selectedAppToProtect?.packageName == app.packageName
-                    Card(
-                        onClick = { viewModel.selectApp(app) },
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isSelected) CyberEmerald.copy(alpha = 0.2f) else DarkMetalSurface
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = if (isSelected) CyberNeonGreen else CyberSlateGray
-                        ),
-                        shape = RoundedCornerShape(10.dp),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                ) {
+                    Box(
                         modifier = Modifier
-                            .widthIn(min = 150.dp, max = 175.dp)
-                            .testTag("app_select_card_${app.packageName}")
+                            .size(38.dp)
+                            .background(
+                                if (isSelected) CyberNeonGreen.copy(alpha = 0.2f) else CyberSlateGray,
+                                CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(34.dp)
-                                    .background(
-                                        if (isSelected) CyberNeonGreen.copy(alpha = 0.3f) else CyberSlateGray,
-                                        CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = getIconVector(app.iconName),
-                                    contentDescription = null,
-                                    tint = if (isSelected) CyberNeonGreen else BrightSlateWhite,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = app.appName,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = if (isSelected) CyberNeonGreen else BrightSlateWhite
-                                )
-                                Text(
-                                    text = app.sizeString,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = DarkTextMuted
-                                )
-                            }
-                        }
+                        Icon(
+                            imageVector = getIconVector(app.iconName),
+                            contentDescription = null,
+                            tint = if (isSelected) CyberNeonGreen else BrightSlateWhite,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = app.appName,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = if (isSelected) CyberNeonGreen else BrightSlateWhite
+                        )
+                        Text(
+                            text = "${app.packageName} • ${app.sizeString}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = DarkTextMuted
+                        )
+                    }
+                    if (isSelected) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = "Selected",
+                            tint = CyberNeonGreen,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
                 }
             }
